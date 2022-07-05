@@ -12,9 +12,10 @@ import { AuthService } from '../../common/services/auth.service'
 export class LoginPageComponent implements OnInit {
 
   form: FormGroup
+  submitted: boolean = false
 
   constructor(
-    private authService: AuthService,
+    public auth: AuthService,
     private router: Router
   ) {
   }
@@ -33,10 +34,15 @@ export class LoginPageComponent implements OnInit {
   submit() {
     if (this.form.invalid) return
 
-    this.authService.login(this.form.value)
+    this.submitted = true
+
+    this.auth.login(this.form.value)
       .subscribe(() => {
         this.form.reset()
         this.router.navigate(['admin', 'dashboard'])
+        this.submitted = false
+      }, () => {
+        this.submitted = false
       })
   }
 }
